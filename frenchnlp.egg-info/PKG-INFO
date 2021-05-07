@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: frenchnlp
-Version: 0.1.1
+Version: 0.1.3
 Summary: State of the art toolchain for natural language processing in French
 Home-page: https://github.com/xiaoouwang/frenchnlp
 Author: Xiaoou WANG
@@ -10,7 +10,7 @@ Download-URL: https://pypi.org/project/frenchnlp
 Description: # French NLP Toolkit
         
         State of the art toolkit for Natural Language Processing in French.
-Keywords: text mining,npl,corpus
+Keywords: text mining,npl,corpus,french
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
