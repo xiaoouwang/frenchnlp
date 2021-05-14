@@ -1,4 +1,4 @@
-# import torch
+import torch
 import pandas as pd
 from os import walk
 import numpy as np
@@ -6,6 +6,11 @@ import json
 import pickle
 import bz2
 import _pickle as cPickle
+import importlib
+import sys
+import transformers as ppb
+from transformers import pipeline
+
 
 def xo_merge_files(path_in, path_out, extension):
     # initiate a empty string
@@ -67,8 +72,8 @@ def xo_replace_with_mask(sent, index, word):
 
 def xo_prob_options(obj_camembert, options):
     # print(obj_camembert)
-    answers = [(x[2].strip(), x[1])
-               for x in obj_camembert if x[2].strip() in options]
+    answers = [(x["token_str"].strip(), x["score"])
+               for x in obj_camembert if x["token_str"].strip() in options]
     # print(answers)
     # different number of answers
     if len(answers) == 0:
@@ -79,34 +84,42 @@ def xo_prob_options(obj_camembert, options):
         return (answers[0][0], answers[0][1], answers[1][0], answers[1][1])
 
 
-def xo_load_data():
-    pd_good = pd.read_csv("wino_for_bert_changed.csv", sep=";")
-    pd_good = pd_good.iloc[:, 1:]
+def xo_load_data(path, sep=";"):
+    # pd_good = pd.read_csv("wino_for_bert_changed.csv", sep=sep)
+    pd_good = pd.read_csv(path, sep=sep)
+    # pd_good = pd_good.iloc[:, 1:]
     col_names = list(pd_good.columns)
-    pd_good = pd.read_csv("wino_for_bert_changed.csv",
-                          sep=";", names=col_names, header=None)
+    # add column names to remove the col names
+    pd_good = pd.read_csv(path,
+                          sep=sep, names=col_names, header=None)
     # pd_good = pd_good.iloc[:, 1:]
     pd_good["response1"] = 0
     pd_good["prob1"] = 0
     pd_good["response2"] = 0
     pd_good["prob2"] = 0
-    pd_good = pd_good.iloc[1:, :]
+    pd_good = pd_good.iloc[1:, :].reset_index(drop=True)
     return pd_good
 
 
-def xo_load_cam(model):
-    camembert = torch.hub.load('pytorch/fairseq', model)
-    camembert.eval()
+def xo_load_cam(cam_model):
+    camembert = ppb.CamembertModel.from_pretrained(cam_model)
     return camembert
 
 
-def xo_produce_answers(model, pd_good):
+def xo_fillin(model_str, k):
+    task = pipeline('fill-mask', model=model_str, top_k=k)
+    return task
+
+
+def xo_produce_answers(pipeline, col, pd_good):
     for i, row in pd_good.iterrows():
-        masked_line = row.masked
+        masked_line = row[col]
         options = row.options.split()
-        answers = model.fill_mask(masked_line, topk=1000)
-        pd_good.loc[i, ["response1"]], pd_good.loc[i, ["prob1"]], pd_good.loc[i, ["response2"]], pd_good.loc[
-            i, ["prob2"]] = xo_prob_options(answers, options)
+        answers = pipeline(masked_line)
+        # pd_good.iloc[i]["response1"], pd_good.iloc[i]["prob1"], pd_good.iloc[i][
+            # "response2"], pd_good.iloc[i]["prob2"] = xo_prob_options(answers, options)
+        pd_good.loc[i, ["response1"]], pd_good.loc[i, ["prob1"]], pd_good.loc[i, [
+            "response2"]], pd_good.loc[i, ["prob2"]] = xo_prob_options(answers, options)
     return pd_good
 
 
@@ -121,17 +134,16 @@ def xo_produce_answers_js(model, pd_good):
     return pd_good
 
 
-def xo_test_single_sent(model, sent):
-    ans = model.fill_mask(sent, topk=20000)
-    return ans
+def xo_test_single_sent(pipeline, sent):
+    return pipeline(sent)
 
 
-def xo_computer_score(pd_good):
+def xo_compute_score(correct_col, pd_good):
     counter_correct = 0
     counter_noresponse = 0
     counter_badresponse = 0
     for i, row in pd_good.iterrows():
-        if row.correct_answer_local_contexte == row.response1:
+        if row[correct_col] == row.response1:
             counter_correct += 1
         elif row.response1 == 0:
             counter_noresponse += 1
@@ -183,3 +195,15 @@ def xo_decompress_pickle(file):
 def xo_compressed_pickle(title, data):
     with bz2.BZ2File(title + '.pbz2', 'w') as f:
         cPickle.dump(data, f)
+
+
+def xo_reimport_all(package):
+    importlib.reload(sys.modules[package])
+
+
+def xo_reimport_module(some_module):
+    importlib.reload(some_module)
+
+
+def xo_reload_self():
+    importlib.reload(sys.modules["utils_xo"])
