@@ -10,7 +10,75 @@ import importlib
 import sys
 import transformers as ppb
 from transformers import pipeline
+import re
+from sklearn.metrics import confusion_matrix
+from sklearn import svm
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.metrics import accuracy_score
+from sklearn.naive_bayes import MultinomialNB
 
+def deft_overlap_ratio(df):
+    set1,set2 = set(df.EltCorrections_normalized), set(df.texteRep_normalized)
+    total = len(set1)
+    inter = len(set1.intersection(set2))
+    return inter/total
+
+def deft_tester(df,features,label):
+    num_features = len(features)
+    if num_features == 1:
+        X_train = df[features[0]].to_numpy().reshape(-1, 1)
+    else:
+        total_features = len(features)
+        if total_features == 2:
+            values1 = df[features[0]].tolist()
+            values2 = df[features[1]].tolist()
+            X_train = [[x,y] for x,y in zip(values1,values2)]
+    print(len(X_train[0]))
+    X_test = X_train
+    y_train = df[label].apply(lambda x : round(x,1)).tolist()
+    y_train = [str(x) for x in y_train]
+    y_test = y_train
+    linear = svm.SVC(kernel='linear', C=1, decision_function_shape='ovo').fit(X_train, y_train)
+    rbf = svm.SVC(kernel='rbf', gamma=1, C=1, decision_function_shape='ovo').fit(X_train, y_train)
+    poly = svm.SVC(kernel='poly', degree=3, C=1, decision_function_shape='ovo').fit(X_train, y_train)
+    sig = svm.SVC(kernel='sigmoid', C=1, decision_function_shape='ovo').fit(X_train, y_train)
+    linear_pred = linear.predict(X_test)
+    # print(X_test[:5])
+    poly_pred = poly.predict(X_test)
+    # print(X_test[:5])
+    rbf_pred = rbf.predict(X_test)
+    # print(X_test[:5])
+    sig_pred = sig.predict(X_test)
+    clf = MultinomialNB().fit(X_train, y_train)
+    # clf_pred = clf.predict(x)
+# print(clf_pred.reshape(-1, 1))
+    accuracy_bayes = clf.score(X_test,y_test)
+    print(set(linear_pred),set(poly_pred),set(rbf_pred),set(sig_pred))
+    # print(X_test[:5])
+    # retrieve the accuracy and print it for all 4 kernel functions
+    accuracy_lin = linear.score(X_test, y_test)
+    accuracy_poly = poly.score(X_test, y_test)
+    accuracy_rbf = rbf.score(X_test, y_test)
+    accuracy_sig = sig.score(X_test, y_test)
+    print("Accuracy Linear Kernel:", accuracy_lin)
+    print("Accuracy Polynomial Kernel:", accuracy_poly)
+    print("Accuracy Radial Basis Kernel:", accuracy_rbf)
+    print("Accuracy Sigmoid Kernel:", accuracy_sig)
+    print("Accuracy Naive Bayes:", accuracy_bayes)
+
+def deft_html_cleaning(text):
+    # remove tags
+    text = re.sub('<[^>]*>', ' ', str(text))
+    # remove non-breaking space
+    text = text.replace("&nbsp;", " ")
+    text = text.replace('&lt;', '<')
+    text = text.replace('&gt;', '>')
+    # text = text.replace(' ', '')
+    text = re.sub(r' +', ' ', text)
+    text = text.strip()
+    # remove multiples spaces
+    return text
 
 def xo_merge_files(path_in, path_out, extension):
     # initiate a empty string
@@ -28,12 +96,30 @@ def xo_merge_files(path_in, path_out, extension):
         f.write(final_text)
 
 
+def xo_import_commons():
+    import pandas as pd
+    import re
+
+
 def xo_read_file(path):
     try:
         with open(path, "r") as f:
             return f.read()
     except:
         print("file doesn't exist")
+
+
+def xo_json2csv(input_path, output_path):
+    df = pd.read_json(input_path)
+    df.to_csv(output_path, index=False)
+
+
+def xo_csv2json_nonull(in_path, out_path):
+    df = pd.read_csv(in_path)
+    xo_write_json_fromdf(out_path, df)
+    text = open(out_path, "r").read()
+    new_text, n = re.subn(":null,", ': "",', text)
+    xo_write_file(out_path, new_text)
 
 
 def xo_read_lines(path):
@@ -49,13 +135,20 @@ def xo_write_file(path, content):
         f.write(content)
 
 
-def xo_write_json(path, dataframe):
-    dataframe.to_json(path, force_ascii=False, orient="records")
+def xo_write_json_fromdf(path, df):
+    df.to_json(path, force_ascii=False, orient="records")
 
 
-def xo_write_json_fromlist(path, js):
+def xo_write_json_fromlist(path, lst):
+    """write to json from a list of dicts
+
+    Args:
+        path (string): path for the output file
+        lst (list): a list of dict
+    """
+
     with open(path, 'w', encoding='utf-8') as outfile:
-        json.dump(js, outfile, ensure_ascii=False)
+        json.dump(lst, outfile, ensure_ascii=False)
 
 
 def xo_count_words(s):
@@ -117,7 +210,7 @@ def xo_produce_answers(pipeline, col, pd_good):
         options = row.options.split()
         answers = pipeline(masked_line)
         # pd_good.iloc[i]["response1"], pd_good.iloc[i]["prob1"], pd_good.iloc[i][
-            # "response2"], pd_good.iloc[i]["prob2"] = xo_prob_options(answers, options)
+        # "response2"], pd_good.iloc[i]["prob2"] = xo_prob_options(answers, options)
         pd_good.loc[i, ["response1"]], pd_good.loc[i, ["prob1"]], pd_good.loc[i, [
             "response2"]], pd_good.loc[i, ["prob2"]] = xo_prob_options(answers, options)
     return pd_good
