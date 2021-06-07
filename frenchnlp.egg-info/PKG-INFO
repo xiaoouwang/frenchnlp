@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: frenchnlp
-Version: 0.1.8
+Version: 0.1.9
 Summary: State of the art toolchain for natural language processing in French
 Home-page: https://github.com/xiaoouwang/frenchnlp
 Author: Xiaoou WANG
@@ -21,7 +21,7 @@ Description: # French NLP Toolkit
         
             Xiaoou Wang, Xingyu Liu, Yimei Yue. “Mesure de similarité textuelle pour l’évaluation automatique de copies d’étudiants.” TALN-RECITAL 2021. [Download](https://xiaoouwang.github.io/xowang/TALN-RECITAL_2021_paper_74.pdf)
         
-        - [ ] text classification
+        - text classification
         
         ## How to use the package
         
