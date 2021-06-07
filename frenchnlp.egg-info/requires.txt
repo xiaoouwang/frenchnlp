@@ -1,2 +1,6 @@
 numpy
 pandas
+transformers
+torch
+sentence_transformers
+sklearn

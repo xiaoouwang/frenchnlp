@@ -3,6 +3,7 @@ MANIFEST.in
 README.md
 setup.py
 frenchnlp/__init__.py
+frenchnlp/sentence.py
 frenchnlp/utils_xo.py
 frenchnlp.egg-info/PKG-INFO
 frenchnlp.egg-info/SOURCES.txt

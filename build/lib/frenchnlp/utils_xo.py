@@ -17,14 +17,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics.pairwise import cosine_similarity
+from transformers import AutoTokenizer, AutoModel
 
 def deft_overlap_ratio(df):
-    set1,set2 = set(df.EltCorrections_normalized), set(df.texteRep_normalized)
+    set1, set2 = set(df.EltCorrections_normalized), set(df.texteRep_normalized)
     total = len(set1)
     inter = len(set1.intersection(set2))
     return inter/total
 
-def deft_tester(df,features,label):
+
+def deft_tester(df, features, label):
     num_features = len(features)
     if num_features == 1:
         X_train = df[features[0]].to_numpy().reshape(-1, 1)
@@ -33,16 +36,20 @@ def deft_tester(df,features,label):
         if total_features == 2:
             values1 = df[features[0]].tolist()
             values2 = df[features[1]].tolist()
-            X_train = [[x,y] for x,y in zip(values1,values2)]
+            X_train = [[x, y] for x, y in zip(values1, values2)]
     print(len(X_train[0]))
     X_test = X_train
-    y_train = df[label].apply(lambda x : round(x,1)).tolist()
+    y_train = df[label].apply(lambda x: round(x, 1)).tolist()
     y_train = [str(x) for x in y_train]
     y_test = y_train
-    linear = svm.SVC(kernel='linear', C=1, decision_function_shape='ovo').fit(X_train, y_train)
-    rbf = svm.SVC(kernel='rbf', gamma=1, C=1, decision_function_shape='ovo').fit(X_train, y_train)
-    poly = svm.SVC(kernel='poly', degree=3, C=1, decision_function_shape='ovo').fit(X_train, y_train)
-    sig = svm.SVC(kernel='sigmoid', C=1, decision_function_shape='ovo').fit(X_train, y_train)
+    linear = svm.SVC(kernel='linear', C=1,
+                     decision_function_shape='ovo').fit(X_train, y_train)
+    rbf = svm.SVC(kernel='rbf', gamma=1, C=1,
+                  decision_function_shape='ovo').fit(X_train, y_train)
+    poly = svm.SVC(kernel='poly', degree=3, C=1,
+                   decision_function_shape='ovo').fit(X_train, y_train)
+    sig = svm.SVC(kernel='sigmoid', C=1,
+                  decision_function_shape='ovo').fit(X_train, y_train)
     linear_pred = linear.predict(X_test)
     # print(X_test[:5])
     poly_pred = poly.predict(X_test)
@@ -53,8 +60,8 @@ def deft_tester(df,features,label):
     clf = MultinomialNB().fit(X_train, y_train)
     # clf_pred = clf.predict(x)
 # print(clf_pred.reshape(-1, 1))
-    accuracy_bayes = clf.score(X_test,y_test)
-    print(set(linear_pred),set(poly_pred),set(rbf_pred),set(sig_pred))
+    accuracy_bayes = clf.score(X_test, y_test)
+    print(set(linear_pred), set(poly_pred), set(rbf_pred), set(sig_pred))
     # print(X_test[:5])
     # retrieve the accuracy and print it for all 4 kernel functions
     accuracy_lin = linear.score(X_test, y_test)
@@ -66,6 +73,7 @@ def deft_tester(df,features,label):
     print("Accuracy Radial Basis Kernel:", accuracy_rbf)
     print("Accuracy Sigmoid Kernel:", accuracy_sig)
     print("Accuracy Naive Bayes:", accuracy_bayes)
+
 
 def deft_html_cleaning(text):
     # remove tags
@@ -79,6 +87,7 @@ def deft_html_cleaning(text):
     text = text.strip()
     # remove multiples spaces
     return text
+
 
 def xo_merge_files(path_in, path_out, extension):
     # initiate a empty string
