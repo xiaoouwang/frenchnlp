@@ -8,7 +8,7 @@ with open('HISTORY.md') as history_file:
 
 setup_args = dict(
     name='frenchnlp',
-    version='0.1.9',
+    version='0.2.0',
     description='State of the art toolchain for natural language processing in French',
     long_description_content_type="text/markdown",
     long_description=README,
