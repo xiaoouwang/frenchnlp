@@ -8,12 +8,12 @@ with open('HISTORY.md') as history_file:
 
 setup_args = dict(
     name='frenchnlp',
-    version='0.2.0',
+    version='0.2.1',
     description='State of the art toolchain for natural language processing in French',
     long_description_content_type="text/markdown",
     long_description=README,
     include_package_data=True,
-    license='MIT',
+    license='Apache Licence 2.0',
     packages=find_packages(),
     author='Xiaoou WANG',
     author_email='xiaoouwangfrance@gmail.com',

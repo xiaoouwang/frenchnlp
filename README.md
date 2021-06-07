@@ -2,6 +2,21 @@
 
 State of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT.
 
+Citation:
+
+```
+@software{frenchnlp,
+  author={Wang Xiaoou},
+  title={frenchnlp: state of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT},
+  year={2021},
+  url = {https://github.com/xiaoouwang/frenchnlp}
+}
+```
+
+```
+Xiaoou, W. (2021). frenchnlp: state of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT. https://github.com/xiaoouwang/frenchnlp.
+```
+
 - sentence similarity measure
 
     * For why average pooling/[cls] shouldn't be used to represent sentence, see
@@ -109,3 +124,13 @@ J'aime les chats.
 J'adore les chats.
 0.9557947
 ```
+
+## License
+
+### Codes
+
+`frenchnlp` is licensed under Apache License 2.0. You can use HanLP in your commercial products for free. We would appreciate it if you add a link to HanLP on your website.
+
+### Models
+
+Unless otherwise specified, all models in `frenchnlp` are licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).

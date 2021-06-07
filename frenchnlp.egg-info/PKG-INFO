@@ -1,15 +1,30 @@
 Metadata-Version: 2.1
 Name: frenchnlp
-Version: 0.2.0
+Version: 0.2.1
 Summary: State of the art toolchain for natural language processing in French
 Home-page: https://github.com/xiaoouwang/frenchnlp
 Author: Xiaoou WANG
 Author-email: xiaoouwangfrance@gmail.com
-License: MIT
+License: Apache Licence 2.0
 Download-URL: https://pypi.org/project/frenchnlp
 Description: # French NLP Toolkit
         
         State of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT.
+        
+        Citation:
+        
+        ```
+        @software{frenchnlp,
+          author={Wang Xiaoou},
+          title={frenchnlp: state of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT},
+          year={2021},
+          url = {https://github.com/xiaoouwang/frenchnlp}
+        }
+        ```
+        
+        ```
+        Xiaoou, W. (2021). frenchnlp: state of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT. https://github.com/xiaoouwang/frenchnlp.
+        ```
         
         - sentence similarity measure
         
@@ -118,6 +133,16 @@ Description: # French NLP Toolkit
         J'adore les chats.
         0.9557947
         ```
+        
+        ## License
+        
+        ### Codes
+        
+        `frenchnlp` is licensed under Apache License 2.0. You can use HanLP in your commercial products for free. We would appreciate it if you add a link to HanLP on your website.
+        
+        ### Models
+        
+        Unless otherwise specified, all models in `frenchnlp` are licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
 Keywords: text mining,npl,corpus,french
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
