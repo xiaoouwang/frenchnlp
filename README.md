@@ -5,16 +5,16 @@ State of the art toolkit for Natural Language Processing in French based on Came
 Citation:
 
 ```
-@software{frenchnlp,
+@misc{hadoop,
   author={Wang Xiaoou},
   title={frenchnlp: state of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT},
   year={2021},
-  url = {https://github.com/xiaoouwang/frenchnlp}
+  howpublished={\url{https://github.com/xiaoouwang/frenchnlp}},
 }
 ```
 
 ```
-Xiaoou, W. (2021). frenchnlp: state of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT. https://github.com/xiaoouwang/frenchnlp.
+Wang Xiaoou. (2021). frenchnlp: state of the art toolkit for Natural Language Processing in French based on CamemBERT/FlauBERT. https://github.com/xiaoouwang/frenchnlp.
 ```
 
 - sentence similarity measure
