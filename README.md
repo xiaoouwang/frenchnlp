@@ -12,7 +12,7 @@ State of the art toolkit for Natural Language Processing in French based on Came
 
     Xiaoou Wang, Xingyu Liu, Yimei Yue. “Mesure de similarité textuelle pour l’évaluation automatique de copies d’étudiants.” TALN-RECITAL 2021. [Download](https://xiaoouwang.github.io/xowang/TALN-RECITAL_2021_paper_74.pdf)
 
-- [ ] text classification
+- text classification
 
 ## How to use the package
 
