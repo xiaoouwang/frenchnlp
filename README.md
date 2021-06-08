@@ -129,7 +129,7 @@ J'adore les chats.
 
 ### Codes
 
-`frenchnlp` is licensed under Apache License 2.0. You can use HanLP in your commercial products for free. We would appreciate it if you add a link to HanLP on your website.
+`frenchnlp` is licensed under Apache License 2.0. You can use `frenchnlp` in your commercial products for free. We would appreciate it if you add a link to `frenchnlp` on your website.
 
 ### Models
 
